@@ -77,11 +77,11 @@ C'est un langage qui peut, comme au début de ce cours, être **peu typé** et s
 | 2004 | **PHP 5** | **POO native**, exceptions, espaces de noms, Zend Engine 2 |
 | 2015 | **PHP 7** | **Performances x2** (Zend Engine 3), types de retour scalaires |
 | 2020 | **PHP 8.0** | Attributs, arguments nommés, **JIT compiler**, `match`, union types |
-| 2021 | PHP 8.1 | Enums, propriétés `readonly`, fibres |
-| 2022 | PHP 8.2 | Classes readonly, types DNF, constantes dans les traits |
-| 2023 | PHP 8.3 | Constantes typées dans les classes, `json_validate()`, `#[Override]` |
-| 2024 | PHP 8.4 | Hooks de propriétés, visibilité asymétrique, nouvelle API DOM |
-| 2025 | PHP 8.5 | En cours de développement |
+| 2021 | **PHP 8.1** | Enums, propriétés `readonly`, fibres |
+| 2022 | **PHP 8.2** | Classes readonly, types DNF, constantes dans les traits |
+| 2023 | **PHP 8.3** | Constantes typées dans les classes, `json_validate()`, `#[Override]` |
+| 2024 | **PHP 8.4** | Hooks de propriétés, visibilité asymétrique, nouvelle API DOM |
+| 2025-2026 | **PHP 8.5** | En cours de développement, opérateur Pipe, Clone With, nouvelles fonctions de manipulation de tableaux |
 
 > ⚠️ **PHP 6 n'a jamais existé** officiellement — le projet a été abandonné.
 
@@ -106,16 +106,16 @@ Pour développer en PHP, nous avons besoin de trois composants :
 | OS | Package | Lien |
 |----|---------|------|
 | Windows | **WAMP** | [wampserver.com](https://www.wampserver.com/) |
-| Windows | WAMP + add-ons | [wampserver.aviatechno.net](https://wampserver.aviatechno.net/) |
+| Windows | WAMP + add-ons | [wampserver.aviatechno.net](https://wampserver.aviatechno.net/) - **Conseillé sous Windows** |
 | macOS | **XAMPP** | [apachefriends.org](https://www.apachefriends.org/fr/index.html) |
-| Linux | **LAMP** | Installation manuelle via apt/yum |
+| Linux | **LAMP** | Installation manuelle via apt/yum, vaut pour WSL2 sous Windows |
 | Tous | **Docker** | [docker.com](https://www.docker.com/) |
 
 ### 3.2 - Installation de WAMP (Windows)
 
 Téléchargez WAMP sur [wampserver.com](https://www.wampserver.com/) et suivez les instructions.
 
-📖 Tutoriel d'installation : [https://espritweb.fr/installer-wamp-sur-windows-10-etape-par-etape-et-sans-erreur/](https://espritweb.fr/installer-wamp-sur-windows-10-etape-par-etape-et-sans-erreur/)
+📖 Tutoriel d'installation : [README.md#installation-de-wamp-sous-windows](README.md#installation-de-wamp-sous-windows)
 
 ### 3.3 - Installation de XAMPP (macOS)
 
@@ -125,14 +125,14 @@ Nous préférons XAMPP à MAMP, car MAMP (version gratuite) pose des problèmes 
 
 ### 3.4 - Vérification de l'installation
 
-Créez un fichier `info.php` dans le dossier racine de votre serveur web :
+Créez un fichier `01-info.php` dans votre dossier `Stagiaires\{Prenom}`  avec le contenu suivant :
 
 ```php
 <?php
 phpinfo();
 ```
 
-Ouvrez `http://localhost/info.php` dans votre navigateur. Vous devriez voir une page détaillant la configuration PHP.
+Ouvrez cette page dans votre navigateur en passant par un `hôte virtuel` (WAMP) ou `www`, `htdocs`, etc . Vous devriez voir une page détaillant la configuration PHP.
 
 > ⚠️ **Supprimez ce fichier en production** : il révèle des informations sensibles sur votre serveur.
 
