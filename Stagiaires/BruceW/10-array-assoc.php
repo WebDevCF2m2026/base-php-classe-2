@@ -19,4 +19,3 @@ echo $monTabAssoc["dateDeNaissance"];
 echo "<hr>";
 echo $monTabAssoc["caracteristique"];
 echo "<hr>";
-?>
