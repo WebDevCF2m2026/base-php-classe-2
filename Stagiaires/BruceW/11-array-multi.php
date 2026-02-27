@@ -32,7 +32,7 @@ echo "<hr>";
 echo "<a href=\"" . $stagiaires[2]["sites"]["github"] . "\" target=\"_blank\">"
      . $stagiaires[2]["sites"]["github"]
 
-?>
+
 
 
 

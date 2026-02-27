@@ -21,4 +21,3 @@ echo $monTab[8]; // affiche "neuf"
 echo "<br>";
 echo $monTab[9]; // affiche "dix"   
 
-?>

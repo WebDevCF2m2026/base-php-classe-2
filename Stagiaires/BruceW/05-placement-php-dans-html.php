@@ -24,4 +24,3 @@ $datetime = date("Y-m-d H:i:s");
 $diff =microtime(true) - $temps;
 // affichage du temps de chargement de la page
 echo "<!--$diff-->";
-?>
