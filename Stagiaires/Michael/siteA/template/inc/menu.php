@@ -1,0 +1,1 @@
+<nav><a href="./">Accueil</a> | <a href="?page=contact">Contact</a></nav>
