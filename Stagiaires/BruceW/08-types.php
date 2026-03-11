@@ -1,6 +1,5 @@
 <?php
 $valeur = "3.14";
-
 echo "Valeur initiale : ";
 var_dump($valeur);
 echo "<br><br>";
@@ -22,4 +21,3 @@ echo "En bool : ";
 var_dump($en_bool);
 
 
-?>
