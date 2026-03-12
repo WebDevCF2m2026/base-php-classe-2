@@ -76,6 +76,12 @@ Il permet aux apprenants de comprendre le flux d'exécution séquentiel, la gest
     - [Les valeurs de retour](#126---les-valeurs-de-retour)
     - [Portée des variables (scope)](#127---portée-des-variables-scope)
 13. [Les chaînes de caractères](#13---les-chaînes-de-caractères)
+14. [Les formulaires - GET et POST](#14---les-formulaires---get-et-post)
+    - [$_GET](#141---_get)
+    - [$_POST](#142---_post)
+    - [Sécuriser les entrées](#143---sécuriser-les-entrées-utilisateur)
+15. [Les fonctions de manipulation de tableaux](#15---les-fonctions-de-manipulation-de-tableaux)
+16. [Les fonctions de date et heure](#16---les-fonctions-de-date-et-heure)
 
 ## 1 - Présentation de PHP
 
@@ -1440,6 +1446,187 @@ echo htmlspecialchars($html); // &lt;script&gt;alert('XSS')&lt;/script&gt;
 
 #### ✏️ Exercice 23
 > Créez `23-strings.php` : demandez un prénom via `$_GET` et affichez-le avec la première lettre en majuscule et le reste en minuscule, même si l'utilisateur tape "jEaN".
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 14 - Les formulaires - GET et POST
+
+### 14.1 - $_GET
+
+Les données sont passées **dans l'URL** (visibles).
+
+```html
+<form action="traitement.php" method="GET">
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="nom">
+    <button type="submit">Envoyer</button>
+</form>
+```
+
+```php
+<?php
+// traitement.php
+if (isset($_GET['nom'])) {
+    echo "Bonjour " . htmlspecialchars($_GET['nom']);
+}
+```
+
+### 14.2 - $_POST
+
+Les données sont envoyées **dans le corps de la requête** (invisibles dans l'URL).
+
+```html
+<form action="traitement.php" method="POST">
+    <label for="email">Email :</label>
+    <input type="email" id="email" name="email">
+    <label for="message">Message :</label>
+    <textarea id="message" name="message"></textarea>
+    <button type="submit">Envoyer</button>
+</form>
+```
+
+```php
+<?php
+// traitement.php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = htmlspecialchars($_POST['email'] ?? '');
+    $message = htmlspecialchars($_POST['message'] ?? '');
+    echo "Email : $email<br>Message : $message";
+}
+```
+
+### 14.3 - Sécuriser les entrées utilisateur
+
+> ⚠️ **JAMAIS** faire confiance aux données utilisateur !
+
+```php
+<?php
+// Toujours vérifier et nettoyer les entrées
+$nom = isset($_POST['nom']) ? htmlspecialchars(trim($_POST['nom'])) : '';
+
+// Vérifier qu'un champ n'est pas vide
+if (empty($nom)) {
+    echo "Le nom est obligatoire";
+}
+
+// Valider un email
+$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+if ($email === false) {
+    echo "Email invalide";
+}
+```
+
+📖 [Documentation : filter_input()](https://www.php.net/manual/fr/function.filter-input.php)
+
+#### ✏️ Exercice 24
+> Créez `24-formulaire.php` : un formulaire de contact (nom, email, message) en POST. Vérifiez que tous les champs sont remplis et affichez un message de confirmation ou d'erreur.
+
+#### ✏️ Exercice 25
+> Créez `25-calculatrice.php` : un formulaire avec deux champs numériques et un select pour l'opération (+, -, *, /). Traitez le calcul en PHP et affichez le résultat.
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 15 - Les fonctions de manipulation de tableaux
+
+```php
+<?php
+$fruits = ["pomme", "poire", "banane"];
+
+// Ajouter
+array_push($fruits, "kiwi");     // Ajoute à la fin
+array_unshift($fruits, "cerise");// Ajoute au début
+$fruits[] = "mangue";            // Ajoute à la fin (raccourci)
+
+// Retirer
+$dernier = array_pop($fruits);   // Retire le dernier
+$premier = array_shift($fruits); // Retire le premier
+
+// Rechercher
+in_array("poire", $fruits);       // true
+$cle = array_search("banane", $fruits); // retourne la clé
+
+// Trier
+sort($fruits);       // Tri croissant (réindexe)
+rsort($fruits);      // Tri décroissant
+asort($fruits);      // Tri croissant (conserve les clés)
+ksort($fruits);      // Tri par clé croissante
+
+// Fusionner
+$legumes = ["carotte", "tomate"];
+$alimentation = array_merge($fruits, $legumes);
+
+// Clés et valeurs
+$cles = array_keys($alimentation);
+$valeurs = array_values($alimentation);
+
+// Filtrer et transformer
+$nombres = [1, 2, 3, 4, 5, 6];
+$pairs = array_filter($nombres, fn($n) => $n % 2 === 0);     // [2, 4, 6]
+$doubles = array_map(fn($n) => $n * 2, $nombres);             // [2, 4, 6, 8, 10, 12]
+```
+
+📖 [Documentation : Fonctions de tableaux](https://www.php.net/manual/fr/ref.array.php)
+
+#### ✏️ Exercice 26
+> Créez `26-tableaux-avances.php` : créez un tableau de 10 nombres aléatoires. Triez-le, retirez les doublons, puis affichez le résultat dans un tableau HTML.
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 16 - Les fonctions de date et heure
+
+```php
+<?php
+// Date actuelle
+echo date("Y-m-d");       // 2025-12-15
+echo date("d/m/Y");       // 15/12/2025
+echo date("H:i:s");       // 14:30:45
+echo date("Y-m-d H:i:s"); // Format datetime MySQL
+
+// Timestamp (secondes depuis 01/01/1970)
+echo time(); // 1734267045
+
+// Créer une date
+echo date("d/m/Y", mktime(0, 0, 0, 12, 25, 2025)); // 25/12/2025
+
+// Parser une date en texte
+echo date("d/m/Y", strtotime("next monday")); // prochain lundi
+echo date("d/m/Y", strtotime("+1 month"));    // dans 1 mois
+echo date("d/m/Y", strtotime("2025-01-01"));  // 01/01/2025
+
+// Formatage jour de la semaine en français
+setlocale(LC_TIME, 'fr_FR.UTF-8');
+```
+
+**Formats courants :**
+
+| Caractère | Description | Exemple |
+|-----------|-------------|---------|
+| `Y` | Année (4 chiffres) | 2025 |
+| `y` | Année (2 chiffres) | 25 |
+| `m` | Mois (01-12) | 03 |
+| `d` | Jour (01-31) | 15 |
+| `H` | Heure 24h (00-23) | 14 |
+| `i` | Minutes (00-59) | 30 |
+| `s` | Secondes (00-59) | 45 |
+| `l` | Jour de la semaine | Monday |
+| `N` | Jour ISO (1=lundi, 7=dimanche) | 3 |
+
+📖 [Documentation : date()](https://www.php.net/manual/fr/function.date.php) | [Formats](https://www.php.net/manual/fr/datetime.format.php)
+
+#### ✏️ Exercice 27
+> Créez `27-dates.php` : affichez la date du jour en français (ex: "Nous sommes le vendredi 15 décembre 2025, il est 14h30"), puis calculez et affichez le nombre de jours restants avant le 31 décembre.
 
 ---
 
