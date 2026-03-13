@@ -23,4 +23,4 @@ $rien = null;
 // Affichage avec le débogueur var_dump()
 var_dump($nom_de_variable, $nomDeVariable2, $NomDeVariable3);
 
-// commentaire 
+// commentaire`
