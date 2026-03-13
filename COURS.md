@@ -67,6 +67,15 @@ Il permet aux apprenants de comprendre le flux d'exécution séquentiel, la gest
     - [include / include_once](#111---include-et-include_once)
     - [require / require_once](#112---require-et-require_once)
     - [Le contrôleur frontal](#113---le-contrôleur-frontal-front-controller)
+12. [Les fonctions](#12---les-fonctions)
+    - [Les fonctions natives](#121---les-fonctions-natives)
+    - [Les fonctions personnalisées](#122---les-fonctions-personnalisées)
+    - [Les paramètres et arguments](#123---les-paramètres-et-arguments)
+    - [Les paramètres par défaut](#124---les-paramètres-par-défaut)
+    - [Les arguments nommés (PHP 8)](#125---les-arguments-nommés-php-8)
+    - [Les valeurs de retour](#126---les-valeurs-de-retour)
+    - [Portée des variables (scope)](#127---portée-des-variables-scope)
+13. [Les chaînes de caractères](#13---les-chaînes-de-caractères)
 
 ## 1 - Présentation de PHP
 
@@ -887,6 +896,8 @@ if ($temperature <= 0) {
 Le `switch` vérifie l'égalité **non stricte** d'une variable contre plusieurs cas. Plus lisible que de multiples `elseif` pour des comparaisons d'égalité.
 
 > ⚠️ Le `switch` de PHP est **non strict** (`==`), contrairement à celui de JavaScript (`===`).
+> **Attention** : sans `break`, l'exécution continue dans les cas suivants (effet de chute).
+> La syntaxe moderne de `match` (PHP 8) est strict et retourne une valeur, sans risque d'oubli de `break`. Nous verrons `match` par la suite.
 
 ```php
 <?php
@@ -1235,6 +1246,200 @@ if (isset($_GET['section'])) {
 
 #### ✏️ Exercice 19
 > Créez un dossier `19-front-controller/` avec l'architecture ci-dessus. Créez un site de 4 pages (accueil, actualités, contact, mentions légales) avec un menu de navigation par `$_GET` et une page 404.
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 12 - Les fonctions
+
+Une fonction est un **bloc de code réutilisable** qui peut prendre des paramètres et renvoyer une valeur.
+
+- **Fonction** : renvoie une valeur avec `return`
+- **Procédure** : ne renvoie rien (affiche directement)
+
+### 12.1 - Les fonctions natives
+
+PHP possède des milliers de fonctions intégrées.
+
+**Fonctions essentielles à connaître :**
+
+| Catégorie | Fonctions |
+|-----------|-----------|
+| **Affichage** | `echo`, `print`, `var_dump()`, `print_r()` |
+| **Types** | `gettype()`, `settype()`, `is_string()`, `is_int()`, `is_array()`, `is_null()`, `is_numeric()`, `isset()`, `empty()`, `unset()` |
+| **Chaînes** | `strlen()`, `strtolower()`, `strtoupper()`, `trim()`, `substr()`, `str_replace()`, `strpos()`, `explode()`, `implode()`, `nl2br()`, `htmlspecialchars()`, `htmlentities()`, `ucfirst()`, `lcfirst()`, `str_contains()` (PHP 8), `str_starts_with()` (PHP 8), `str_ends_with()` (PHP 8) |
+| **Tableaux** | `count()`, `array_push()`, `array_pop()`, `array_shift()`, `array_unshift()`, `array_merge()`, `array_keys()`, `array_values()`, `in_array()`, `array_search()`, `sort()`, `rsort()`, `ksort()`, `krsort()`, `array_reverse()`, `array_unique()`, `array_slice()`, `array_splice()`, `array_map()`, `array_filter()` |
+| **Mathématiques** | `mt_rand()`, `rand()`, `round()`, `ceil()`, `floor()`, `abs()`, `max()`, `min()`, `pow()`, `sqrt()` |
+| **Date** | `date()`, `time()`, `mktime()`, `strtotime()` |
+| **Fichiers** | `file_get_contents()`, `file_put_contents()`, `fopen()`, `fclose()`, `fwrite()`, `file_exists()`, `is_file()`, `is_dir()` |
+
+📖 [Référence complète des fonctions PHP](https://www.php.net/manual/fr/funcref.php)
+
+---
+
+### 12.2 - Les fonctions personnalisées
+
+```php
+<?php
+function bonjour() {
+    return "Bonjour !";
+}
+
+echo bonjour(); // Bonjour !
+```
+
+📖 [Documentation : Fonctions](https://www.php.net/manual/fr/language.functions.php)
+
+---
+
+### 12.3 - Les paramètres et arguments
+
+```php
+<?php
+function addition($a, $b) {
+    return $a + $b;
+}
+
+echo addition(5, 3); // 8
+```
+
+---
+
+### 12.4 - Les paramètres par défaut
+
+```php
+<?php
+function saluer($prenom = "inconnu", $politesse = "Bonjour") {
+    return "$politesse $prenom !";
+}
+
+echo saluer("Jean");          // Bonjour Jean !
+echo saluer("Marie", "Salut");// Salut Marie !
+echo saluer();                // Bonjour inconnu !
+```
+
+> ⚠️ Les paramètres avec valeur par défaut doivent être placés **après** ceux sans valeur par défaut.
+
+---
+
+### 12.5 - Les arguments nommés (PHP 8)
+
+Depuis PHP 8, on peut passer les arguments **par leur nom** :
+
+```php
+<?php
+$texte = "Hello-World";
+
+// Ordre classique
+echo str_replace("-", " ", $texte); // Hello World
+
+// Arguments nommés (ordre libre)
+echo str_replace(subject: $texte, replace: " ", search: "-"); // Hello World
+```
+
+📖 [Documentation : Arguments nommés](https://www.php.net/manual/fr/functions.arguments.php#functions.named-arguments)
+
+---
+
+### 12.6 - Les valeurs de retour
+
+```php
+<?php
+function estPair($nombre) {
+    return $nombre % 2 === 0;
+}
+
+if (estPair(4)) {
+    echo "4 est pair";  // Affiché
+}
+
+if (!estPair(7)) {
+    echo "7 est impair"; // Affiché
+}
+```
+
+#### ✏️ Exercice 20
+> Créez `20-ma-fonction.php` : créez une fonction `estPair($n)` qui retourne `true` si le nombre est pair, `false` sinon. Testez-la avec plusieurs nombres.
+
+#### ✏️ Exercice 21
+> Créez `21-calculette.php` : créez une fonction `calculSimple($a, $b, $operateur)` qui calcule `+`, `-`, `*`, `/` selon l'opérateur passé en paramètre. Gérez le cas de la division par zéro.
+
+#### ✏️ Exercice 22
+> Créez `22-fonctions-string.php` : créez une fonction `inverserMot($mot)` qui retourne le mot à l'envers **sans utiliser** `strrev()`. Testez avec "Bonjour" → "ruojnoB".
+
+---
+
+### 12.7 - Portée des variables (scope)
+
+Les variables déclarées dans une fonction sont **locales** à cette fonction.
+
+```php
+<?php
+$nom = "Global";
+
+function test() {
+    // $nom n'existe PAS ici
+    echo $nom; // ⚠️ Warning: Undefined variable
+}
+
+// Pour accéder à une variable globale :
+function testGlobal() {
+    global $nom; // Déconseillé en général
+    echo $nom;   // "Global"
+}
+
+// Meilleure pratique : passer en paramètre
+function afficherNom($nom) {
+    echo $nom;
+}
+afficherNom($nom); // "Global"
+```
+
+📖 [Documentation : Portée des variables](https://www.php.net/manual/fr/language.variables.scope.php)
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 13 - Les chaînes de caractères
+
+PHP offre de nombreuses façons de manipuler les chaînes.
+
+```php
+<?php
+$texte = "  Bonjour le Monde !  ";
+
+echo strlen($texte);           // 23 (longueur)
+echo trim($texte);             // "Bonjour le Monde !" (supprime espaces)
+echo strtolower($texte);       // "  bonjour le monde !  "
+echo strtoupper($texte);       // "  BONJOUR LE MONDE !  "
+echo substr($texte, 2, 7);     // "Bonjour" (extraction)
+echo str_replace("Monde", "PHP", $texte); // "  Bonjour le PHP !  "
+echo strpos($texte, "Monde");  // 16 (position)
+
+// PHP 8+
+echo str_contains($texte, "Monde");     // true
+echo str_starts_with($texte, "  Bon");  // true
+echo str_ends_with($texte, "!  ");      // true
+
+// Découper / Joindre
+$mots = explode(" ", trim($texte)); // ["Bonjour", "le", "Monde", "!"]
+echo implode("-", $mots);           // "Bonjour-le-Monde-!"
+
+// Sécurité
+$html = "<script>alert('XSS')</script>";
+echo htmlspecialchars($html); // &lt;script&gt;alert('XSS')&lt;/script&gt;
+```
+
+📖 [Documentation : Fonctions de chaînes](https://www.php.net/manual/fr/ref.strings.php)
+
+#### ✏️ Exercice 23
+> Créez `23-strings.php` : demandez un prénom via `$_GET` et affichez-le avec la première lettre en majuscule et le reste en minuscule, même si l'utilisateur tape "jEaN".
 
 ---
 

@@ -21,6 +21,4 @@ $personne = ["clef1" => "valeur1", "clef2" => "valeur2"];
 $rien = null;
 
 // Affichage avec le débogueur var_dump()
-var_dump($nom_de_variable, $nomDeVariable2, $NomDeVariable3);
-
-// commentaire 
+var_dump($nom_de_variable, $nomDeVariable2, $NomDeVariable3, $estActif, $nombres, $personne, $rien, $GLOBALS);
