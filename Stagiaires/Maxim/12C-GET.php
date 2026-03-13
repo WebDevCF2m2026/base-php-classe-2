@@ -7,7 +7,7 @@ $arrayData = [
     ],
     'portfolio'=> [
         'Title' => "Mon portfolio",
-        'Text' => "<p>Bienvenue sur la section concernat mes travaux</p><p><img src='https://avatars.githubusercontent.com/u/183538619?v=4' alt='JD - Tchomgui'><img src='https://avatars.githubusercontent.com/u/257771282?v=4' alt='Irina Savastre'><img src='https://avatars.githubusercontent.com/u/255340561?v=4' alt='Maxim Pacini'></p>",
+        'Text' => "<p>Bienvenue sur la section concernat mes travaux</p><p>",
     ],
     'works'=> [
         'Title' => "Mes Travaux",
