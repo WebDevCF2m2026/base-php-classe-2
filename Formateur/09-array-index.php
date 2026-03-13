@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 // tableau indexé
 $monTab = ['un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix'];
