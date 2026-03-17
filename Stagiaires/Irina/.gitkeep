@@ -1,2 +1,54 @@
 <?php
-// tableau 
+// tableau  associatif, contient key =>
+
+$monTabAssoc = [
+    "prenom" => "Michael",
+    "nom"  => "Pitz",
+    "caracteristique" => "égocentrique",
+    "dateDeNaissance" => "1951-03-02",
+]
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tlabeaux associatifs</title>
+</head>
+<body>
+     <h1> Tableaux associatifs</h1>
+     <p> Tableau contenant des clef non automatique et des valeurs</p>
+    <?php
+    echo $monTabAssoc["prenom"];
+    echo "<hr>";
+    echo $monTabAssoc["nom"];
+    echo "<hr>";
+    echo $monTabAssoc["caracteristique"];
+    echo "<hr>";
+    echo $monecho "<hr>"["dateDeNaissance"];
+    echo "<hr>";
+    ?>
+    <h3> Simple concaténation</h3>
+    <?php echo $monTabAssoc["prenom"] . "<hr>" .
+    echo $monTabAssoc["nom"] . ;echo "<hr>";
+    echo $monTabAssoc["caracteristique"]; echo "<hr>";
+    echo $monecho "<hr>"["dateDeNaissance"];echo "<hr>";
+   ?>
+   <h3> Concaténation dans les ""</h3>
+   <p> C'est posssible, car un dans une url ou dans un formularire, il peut exister des tableauxasscociatifs/et/ou indexé, il suffit de retirer les ' ou " '</p>
+   
+   <?php 
+   echo "$monTabAssoc["prenom"]<hr>$monTabAssoc["nom"]<hr>$monTabAssoc["caracteristique"]; echo "<hr>";
+   $monecho <hr>["dateDeNaissance"]<hr>";
+
+
+    <?php
+
+
+    var_dump($monTabAssoc,$_Get);
+
+
+  
+
+</body>
+</html>

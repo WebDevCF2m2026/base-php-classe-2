@@ -26,23 +26,29 @@ $arrayData = [
 
 
 // si la variable $_GET est vide : accueil
-if(empty($_GET)){
+if(empty($_GET)):
     // création des variables de l'accueil
     $title = 'Variable superglobale $_GET';
     $text = 'Bienvenue sur mon site';
 
 // si la variable est une section    
-}elseif(isset($_GET['section'])){
-
-    $title = $arrayData[$_GET['section']]['Title'];
-    $text = $arrayData[$_GET['section']]['Text'];
+elseif(isset($_GET['section'])):
+    // Si la section est valide (clef dans le tableau arrayData)
+    if(key_exists($_GET['section'],$arrayData)){
+        // valeurs du tableau
+        $title = $arrayData[$_GET['section']]['Title'];
+        $text = $arrayData[$_GET['section']]['Text'];
+    }else{
+        $title = "Erreur 404";
+        $text = "<h3>Erreur 404</h3><p>Cette page n'existe pas ou plus!</p>";
+    }
 
 // il existe des variables get, mais elle n'ont rien à voir avec ma navigation
-}else{
+else:
     // création des variables de l'accueil
     $title = 'Variable superglobale $_GET';
     $text = 'Bienvenue sur mon site';
-}
+endif;
 
 ?>
 <!DOCTYPE html>

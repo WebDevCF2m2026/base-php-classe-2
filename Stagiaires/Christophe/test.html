@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de testt</title>
+    <style>
+        .champ {
+            margin-bottom: 20px;
+        }
+        .champ label {
+            display: inline-block;
+            width: 130px;
+            text-align: right;
+        }
+        textarea {
+            resize: none;
+            width: 200px;
+            height: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test d'un formulaire avec PHP</h1>
+    <p>Le contenu du formulaire va etre envoye a la page test.php</p>
+    <form action="test.php" method="get" name="form-test">
+        <div class="champ"><label for="nom">Entrer votre nom : </label>
+            <input type="text" name="nom" id="nom">
+        </div>
+        <br>
+        <div class="champ"><label for="age">Entrer votre age : </label>
+            <input type="number" name="age" id="age">
+        </div>
+        <br>
+        <div class="champ"><label for="message">Entrer votre message: </label>
+            <textarea name="message" id=""></textarea>
+        </div>
+        <input type="submit" name="" id="" value="Envoyer les données">
+
+    </form>
+</body>
+
+</html>

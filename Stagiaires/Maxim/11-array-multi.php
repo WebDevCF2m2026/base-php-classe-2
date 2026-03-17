@@ -1,4 +1,5 @@
 <?php
+
 $stagiaires = [
     "WEBDEV01" => [
         "Nom" => "Dupont",
@@ -16,17 +17,7 @@ $stagiaires = [
             "github" => "https://github.com/marie",
         ],
     ],
-    "WEBDEV03" => [
-        "Nom" => "Dakir",
-        "Prenom" => "Badr",
-        "Sites" => [
-            "SitePerso" => "https://dakirbadr49-coder.github.io/TI-Prefo/",
-            "github" => "https://github.com/dakirbadr49-coder",
-        ],
-    ],
 ];
 
-// Accéder au github de Marie
-echo $stagiaires["WEBDEV03"]["Sites"]["github"];
-var_dump ($stagiaires)
-// https://github.com/marie
+// acces tableau 
+echo $stagiaires["WEBDEV01"]["nom"]["Sites"]["github"];
