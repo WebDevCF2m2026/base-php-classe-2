@@ -10,6 +10,14 @@
 **
 ******************************************/
 
-// contantes magiques __DIR__, 
-// nous donne le chemin du serveur depuis la racine
-echo __DIR__;
+// inclure les dependances, 
+// ici le fichier de configuration
+// require_once rend le chargement du fichier 
+// obligatoire pour continuer (require plutôt qu'include)
+// le _once fait que si il est déjà chargé, on utilisera
+// celui qui est chargé, et pas celui-ci
+require_once "../config.php";
+
+
+echo 'Racine de notre projet :'.PATH_TO_PROJECT_ROOT;
+
