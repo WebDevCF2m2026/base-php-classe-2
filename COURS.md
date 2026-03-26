@@ -82,6 +82,15 @@ Il permet aux apprenants de comprendre le flux d'exécution séquentiel, la gest
     - [Sécuriser les entrées](#143---sécuriser-les-entrées-utilisateur)
 15. [Les fonctions de manipulation de tableaux](#15---les-fonctions-de-manipulation-de-tableaux)
 16. [Les fonctions de date et heure](#16---les-fonctions-de-date-et-heure)
+17. [Gestion des fichiers](#17---gestion-des-fichiers)
+18. [Les sessions et cookies](#18---les-sessions-et-cookies)
+19. [Introduction à PDO (bases de données)](#19---introduction-à-pdo-bases-de-données)
+20. [Gestion des erreurs et exceptions](#20---gestion-des-erreurs-et-exceptions)
+21. [Liste des fonctions à connaître](#21---liste-des-fonctions-à-connaître)
+22. [Exercices récapitulatifs](#22---exercices-récapitulatifs)
+23. [Ressources et liens utiles](#23---ressources-et-liens-utiles)
+
+---
 
 ## 1 - Présentation de PHP
 
@@ -1633,3 +1642,344 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
 [Retour à la table des matières](#table-des-matières)
 
 ---
+
+## 17 - Gestion des fichiers
+
+```php
+<?php
+// Lire un fichier entier
+$contenu = file_get_contents("mon-fichier.txt");
+
+// Écrire dans un fichier (écrase le contenu)
+file_put_contents("mon-fichier.txt", "Nouveau contenu");
+
+// Ajouter au fichier
+file_put_contents("mon-fichier.txt", "\nLigne ajoutée", FILE_APPEND);
+
+// Vérifier l'existence
+if (file_exists("mon-fichier.txt")) {
+    echo "Le fichier existe";
+}
+
+// Lire ligne par ligne
+$lignes = file("mon-fichier.txt"); // Tableau de lignes
+foreach ($lignes as $numero => $ligne) {
+    echo "Ligne $numero : $ligne<br>";
+}
+
+// Lire/écrire du JSON
+$data = ["nom" => "Dupont", "age" => 30];
+file_put_contents("data.json", json_encode($data, JSON_PRETTY_PRINT));
+
+$json = file_get_contents("data.json");
+$decoded = json_decode($json, true); // true pour tableau associatif
+```
+
+📖 [Documentation : Fonctions de fichiers](https://www.php.net/manual/fr/ref.filesystem.php)
+
+#### ✏️ Exercice 28
+> Créez `28-fichiers.php` : créez un mini livre d'or. Un formulaire permet d'ajouter un message (nom + message). Les messages sont stockés dans un fichier JSON et affichés sur la page.
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 18 - Les sessions et cookies
+
+### 18.1 - Les sessions
+
+Les sessions permettent de stocker des données **côté serveur** pour un utilisateur, entre les pages.
+
+```php
+<?php
+// TOUJOURS en première ligne, AVANT tout HTML
+session_start();
+
+// Stocker des données
+$_SESSION['nom'] = "Dupont";
+$_SESSION['connecte'] = true;
+
+// Lire des données (sur une autre page)
+session_start();
+echo $_SESSION['nom']; // Dupont
+
+// Supprimer une variable de session
+unset($_SESSION['nom']);
+
+// Détruire toute la session
+session_destroy();
+```
+
+### 18.2 - Les cookies
+
+Les cookies stockent des données **côté client** (navigateur).
+
+```php
+<?php
+// Créer un cookie (expire dans 30 jours)
+setcookie("theme", "dark", time() + (86400 * 30), "/");
+
+// Lire un cookie
+if (isset($_COOKIE['theme'])) {
+    echo $_COOKIE['theme']; // dark
+}
+
+// Supprimer un cookie (expiration dans le passé)
+setcookie("theme", "", time() - 3600, "/");
+```
+
+> ⚠️ `setcookie()` doit être appelé **AVANT** tout `echo` ou HTML.
+
+📖 [Documentation : Sessions](https://www.php.net/manual/fr/book.session.php) | [Cookies](https://www.php.net/manual/fr/function.setcookie.php)
+
+#### ✏️ Exercice 29
+> Créez `29-session.php` : un formulaire de connexion simple (nom d'utilisateur stocké en session). Affichez "Bienvenue, NOM" si connecté, ou le formulaire sinon. Ajoutez un bouton de déconnexion.
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 19 - Introduction à PDO (bases de données)
+
+**PDO** (PHP Data Objects) est une interface d'accès aux bases de données, utilisant la **programmation orientée objet** même dans un contexte procédural.
+
+### 19.1 - Connexion à la base de données
+
+```php
+<?php
+try {
+    $pdo = new PDO(
+        'mysql:host=localhost;dbname=ma_base;charset=utf8mb4',
+        'root',       // utilisateur
+        '',            // mot de passe
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]
+    );
+    echo "Connexion réussie !";
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
+```
+
+### 19.2 - Requêtes simples (SELECT)
+
+```php
+<?php
+// SELECT simple
+$stmt = $pdo->query("SELECT * FROM utilisateurs");
+$utilisateurs = $stmt->fetchAll();
+
+foreach ($utilisateurs as $user) {
+    echo $user['nom'] . " - " . $user['email'] . "<br>";
+}
+```
+
+### 19.3 - Requêtes préparées (SÉCURITÉ !)
+
+> ⚠️ **TOUJOURS** utiliser les requêtes préparées pour les données utilisateur afin d'éviter les **injections SQL**.
+
+```php
+<?php
+// SELECT avec paramètre
+$stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE id = :id");
+$stmt->execute(['id' => 5]);
+$user = $stmt->fetch();
+
+// INSERT
+$stmt = $pdo->prepare("INSERT INTO utilisateurs (nom, email) VALUES (:nom, :email)");
+$stmt->execute([
+    'nom' => htmlspecialchars($_POST['nom']),
+    'email' => filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL),
+]);
+
+// UPDATE
+$stmt = $pdo->prepare("UPDATE utilisateurs SET nom = :nom WHERE id = :id");
+$stmt->execute(['nom' => 'Nouveau nom', 'id' => 5]);
+
+// DELETE
+$stmt = $pdo->prepare("DELETE FROM utilisateurs WHERE id = :id");
+$stmt->execute(['id' => 5]);
+```
+
+📖 [Documentation : PDO](https://www.php.net/manual/fr/book.pdo.php) | [Requêtes préparées](https://www.php.net/manual/fr/pdo.prepared-statements.php)
+
+#### ✏️ Exercice 30
+> Créez une base de données `exercice_php` avec une table `messages` (id, auteur, contenu, date_creation). Créez `30-pdo.php` : un formulaire pour ajouter des messages et une page qui les affiche tous, triés par date.
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 20 - Gestion des erreurs et exceptions
+
+### 20.1 - Les niveaux d'erreur
+
+```php
+<?php
+// Afficher toutes les erreurs (en développement)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Cacher les erreurs (en production)
+error_reporting(0);
+ini_set('display_errors', 0);
+```
+
+### 20.2 - try / catch (exceptions)
+
+```php
+<?php
+try {
+    // Code qui peut échouer
+    $resultat = 10 / 0;
+} catch (DivisionByZeroError $e) {
+    echo "Erreur : " . $e->getMessage();
+} catch (Exception $e) {
+    echo "Erreur générale : " . $e->getMessage();
+} finally {
+    echo "Ce code s'exécute toujours";
+}
+```
+
+### 20.3 - Lancer une exception
+
+```php
+<?php
+function diviser($a, $b) {
+    if ($b == 0) {
+        throw new Exception("Division par zéro impossible !");
+    }
+    return $a / $b;
+}
+
+try {
+    echo diviser(10, 0);
+} catch (Exception $e) {
+    echo "Erreur : " . $e->getMessage();
+}
+```
+
+📖 [Documentation : Exceptions](https://www.php.net/manual/fr/language.exceptions.php)
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 21 - Liste des fonctions à connaître
+
+Ces fonctions sont **à connaître par cœur** pour la certification :
+
+### Affichage et débogage
+`echo` · `print` · `var_dump()` · `print_r()` · `phpinfo()`
+
+### Vérification de variables
+`isset()` · `empty()` · `unset()` · `gettype()` · `settype()` · `is_string()` · `is_int()` · `is_float()` · `is_bool()` · `is_array()` · `is_null()` · `is_numeric()`
+
+### Chaînes de caractères
+`strlen()` · `strtolower()` · `strtoupper()` · `ucfirst()` · `lcfirst()` · `trim()` · `ltrim()` · `rtrim()` · `substr()` · `str_replace()` · `strpos()` · `explode()` · `implode()` · `nl2br()` · `htmlspecialchars()` · `htmlentities()` · `strip_tags()` · `str_contains()` · `str_starts_with()` · `str_ends_with()` · `sprintf()` · `number_format()` · `str_pad()` · `str_repeat()` · `str_word_count()` · `md5()` · `sha1()` · `password_hash()` · `password_verify()`
+
+### Tableaux
+`count()` · `array_push()` · `array_pop()` · `array_shift()` · `array_unshift()` · `array_merge()` · `array_keys()` · `array_values()` · `in_array()` · `array_search()` · `sort()` · `rsort()` · `asort()` · `arsort()` · `ksort()` · `krsort()` · `array_reverse()` · `array_unique()` · `array_slice()` · `array_splice()` · `array_map()` · `array_filter()` · `array_combine()` · `array_chunk()` · `array_key_exists()` · `compact()` · `extract()`
+
+### Mathématiques
+`mt_rand()` · `rand()` · `round()` · `ceil()` · `floor()` · `abs()` · `max()` · `min()` · `pow()` · `sqrt()` · `intval()` · `floatval()`
+
+### Date et heure
+`date()` · `time()` · `mktime()` · `strtotime()` · `checkdate()`
+
+### Fichiers
+`file_get_contents()` · `file_put_contents()` · `file_exists()` · `is_file()` · `is_dir()` · `fopen()` · `fclose()` · `fwrite()` · `fread()` · `fgets()`
+
+### JSON
+`json_encode()` · `json_decode()` · `json_validate()` (PHP 8.3)
+
+### Divers
+`header()` · `exit` / `die` · `sleep()` · `filter_input()` · `filter_var()`
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 22 - Exercices récapitulatifs
+
+### ✏️ Exercice R1 - Générateur de table de multiplication
+> Créez une page qui affiche les tables de multiplication de 1 à 10 dans un tableau HTML `<table>`. Chaque cellule affiche le résultat.
+
+### ✏️ Exercice R2 - Pierre-Feuille-Ciseaux
+> Créez un jeu de Pierre-Feuille-Ciseaux. L'ordinateur choisit au hasard, le joueur choisit via un formulaire GET. Affichez le résultat avec un compteur de score stocké en `$_GET` ou en session.
+
+### ✏️ Exercice R3 - Mini blog avec fichiers JSON
+> Créez un mini blog avec : un formulaire pour ajouter un article (titre, contenu, auteur, date auto), stockage dans un fichier JSON, affichage de tous les articles triés par date, suppression d'un article.
+
+### ✏️ Exercice R4 - Gestionnaire de contacts (PDO)
+> Créez un CRUD complet (Create, Read, Update, Delete) pour une table `contacts` en base de données avec PDO. Champs : id, nom, prenom, email, telephone, date_creation.
+
+### ✏️ Exercice R5 - Site complet avec contrôleur frontal
+> Créez un site de 5 pages avec contrôleur frontal, sessions (connexion/déconnexion), formulaire de contact (POST), page d'actualités (données depuis un fichier JSON), et gestion d'une page 404.
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 23 - Ressources et liens utiles
+
+### Documentation officielle
+- 📖 [PHP.net - Manuel en français](https://www.php.net/manual/fr/)
+- 📖 [Référence des fonctions](https://www.php.net/manual/fr/funcref.php)
+- 📖 [Types de données](https://www.php.net/manual/fr/language.types.php)
+- 📖 [Variables](https://www.php.net/manual/fr/language.variables.php)
+- 📖 [Structures de contrôle](https://www.php.net/manual/fr/language.control-structures.php)
+- 📖 [Fonctions](https://www.php.net/manual/fr/language.functions.php)
+- 📖 [PDO](https://www.php.net/manual/fr/book.pdo.php)
+
+### Cours CF2M (anciens)
+- 🎓 [PHP-base 2025](https://github.com/WebDevCF2m2025/PHP-base)
+- 🎓 [PHP-base 2023-2024](https://github.com/WebDevCF2m2023/PHP-base)
+- 🎓 [Bases PHP 2022](https://github.com/WebDevCF2m2022/bases-php-2022)
+- 🎓 [PHP Initiation 2021](https://github.com/WebDevCF2m2021/PHP-Initiation-programmation)
+
+### Algorithmique
+- 🧮 [France IOI - Exercices d'algorithmique](http://www.france-ioi.org/)
+- 🧮 [OpenClassrooms - Algorithmique](https://openclassrooms.com/fr/courses/7527306-decouvrez-le-fonctionnement-des-algorithmes)
+- 🧮 [Apprendre l'algorithmique - Zeste de Savoir](https://zestedesavoir.com/tutoriels/531/les-bases-de-lalgorithmique/)
+
+### Cours externes
+- 📚 [Pierre Giraud - Cours PHP complet](https://www.pierre-giraud.com/php-mysql-apprendre-coder-cours/)
+- 📚 [Grafikart - Tutoriels PHP](https://grafikart.fr/formations/php)
+- 📚 [OpenClassrooms - PHP/MySQL](https://openclassrooms.com/fr/courses/918836-concevez-votre-site-web-avec-php-et-mysql)
+- 📚 [W3Schools PHP (EN)](https://www.w3schools.com/php/)
+- 📚 [PHP The Right Way (EN)](https://phptherightway.com/)
+
+### Outils
+- 🛠️ [WAMP Server](https://www.wampserver.com/)
+- 🛠️ [XAMPP](https://www.apachefriends.org/fr/index.html)
+- 🛠️ [Visual Studio Code](https://code.visualstudio.com/)
+- 🛠️ [PhpStorm](https://www.jetbrains.com/phpstorm/)
+- 🛠️ [phpMyAdmin](https://www.phpmyadmin.net/)
+
+### Sécurité
+- 🔒 [OWASP PHP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html)
+- 🔒 [PHP Security Best Practices](https://www.php.net/manual/fr/security.php)
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+> **Licence** : Ce cours est libre de distribution pour un usage pédagogique.
+> **CF2M** - Centre de Formation 2 Mille - Bruxelles

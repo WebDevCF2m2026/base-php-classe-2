@@ -22,7 +22,7 @@ require_once "../config.php";
 // nommée 'page'
 if(isset($_GET['page'])){
 
-    // si elle est dans le tableau des pages acceptées depuis confi.php
+    // si elle est dans le tableau des pages acceptées depuis config.php
     if(in_array($_GET['page'], NOS_PAGES)){
         // on les charges
         include PATH_TO_PROJECT_ROOT."/view/".$_GET['page'].".php";
