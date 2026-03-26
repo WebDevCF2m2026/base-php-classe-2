@@ -1,17 +1,18 @@
 <?php
-# Formateur/19-front-controller/public/index.php
-
-/*****************************************
-**
-**          CONTROLLER FRONTAL
-**
-** Ce fichier va gérer toutes les requêtes 
-** Vers les pages du site
-**
-******************************************/
-// require once rend le chargement du fichire obligatoire
-require_once "../config.php";
-
-// contantes magiques __DIR__, 
-// nous donne le chemin du serveur depuis la racine
-echo 'Racine de notre projet :'.PATH_TO_PROJECT_ROOT;
+if (isset($_GET['section'])) {
+    switch ($_GET['section']) {
+        case 'actualites':
+            include('../templates/actualites.php');
+            break;
+        case 'contact':
+            include('../templates/contact.php');
+            break;
+        case 'mentions-legales':
+            include('../templates/mentions-legales.php');
+            break;
+        default:
+            include('../templates/page-404.php');
+    }
+} else {
+    include('../templates/accueil.php');
+}

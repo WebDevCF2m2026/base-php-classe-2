@@ -2,7 +2,11 @@
 
 ## Premier Site avec contrôleur frontal
 
-- création du dossier `public`, c'est le seul accès qu'on laissera aux utilisateurs du site (**Sécurité!**)
+### Création du .gitignore
+
+Ce fichier indique à git ce qu'on ne veut pas suivre et donc envoyer sur 
+
+### création du dossier `public`, c'est le seul accès qu'on laissera aux utilisateurs du site (**Sécurité!**)
 - Pour cet exercice on va créer un fichier nommé `index.php` à la racine de `19-front-controller` avec une redirection vers le dossier `public`, car l'exercice est accessible par une une autre URL. Il contient une redirection relative `header("Location: public");`
 
 ```php
@@ -37,5 +41,7 @@ Pour voir le chemin, on peut utiliser :
 // nous donne le chemin du serveur depuis la racine
 echo __DIR__;
 ```
+
+
 
 
