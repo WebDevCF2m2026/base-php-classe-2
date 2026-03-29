@@ -20,7 +20,7 @@ $arrayData = [
             <textarea name='monMessage' placeholder='votre message'></textarea><br>
             <input type='submit' value='envoyer'>
         </form>
-        ",
+        ",+
     ],
 ];
 
