@@ -1,9 +1,9 @@
 <?php
-// temperaturé au hazard entre -100 et 100
-$temperature = rand(-100, 100)
+// temperaturé au hazard entre -100 et 200
+$temperature = rand(-100, 200);
 
 //variable de type string qui contient le debut de phrase qui est le meme dans les 3 cas
-$reponse .='La variable $temperature vaut '.$temperature;
+$reponse ='La variable $temperature vaut '.$temperature;
 
 //condition pour vérifier la valeur de température
 //inferieure ou egale a >= solide

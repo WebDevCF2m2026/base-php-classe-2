@@ -1,0 +1,5 @@
+# Formateur/19-front-controller/.gitignore
+
+# Fichier de configuration
+# Avec des valeurs sensibles
+config.php
