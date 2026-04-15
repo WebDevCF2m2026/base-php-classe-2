@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>paire / impaire</h1>
+    <h2>Exerise 14</h2>
+    <p>Créez 14-pair.php : générez un nombre aléatoire entre 1 et 20 avec mt_rand().
+        S'il est pair, affichez "Le nombre X est pair", sinon "Le nombre X est impair".
+        Indice : utilisez l'opérateur modulo %.</p>
+    <?php
+    //nombre en hasard entre 1 et 20 (PHP 7.1 rand = alias de mt_rand)
+    $nombre = mt_rand(1,20);
+    
+    if ($nombre%2===0){
+        echo "$nombre est pair"
+    }else{
+        echo "$nombre est impair"
+    }
+
+    //si on a pas de reste de la division eucludienne
+    ?>
+
+</body>
+
+</html>
